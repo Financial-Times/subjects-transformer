@@ -28,7 +28,7 @@ func (t *TmeRepository) getSubjectsTaxonomy() (model.Taxonomy, error) {
 	if err != nil {
 		return model.Taxonomy{}, err
 	}
-	req.Header.Set("Clientuserprincipal", t.principalHeader)
+	req.Header.Set("ClientUserPrincipal", t.principalHeader)
 	resp, err := t.httpClient.Do(req)
 	if err != nil {
 		return model.Taxonomy{}, err

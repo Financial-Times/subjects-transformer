@@ -56,7 +56,7 @@ type dummyClient struct {
 }
 
 func (d *dummyClient) Do(req *http.Request) (resp *http.Response, err error) {
-	d.assert.Equal(d.principalHeader, req.Header.Get("Clientuserprincipal"), fmt.Sprintf("Expected Clientuserprincipal header incorrect"))
+	d.assert.Equal(d.principalHeader, req.Header.Get("ClientUserPrincipal"), fmt.Sprintf("Expected ClientUserPrincipal header incorrect"))
 	d.assert.Equal(d.structureServiceBaseUrl+"/metadata-services/structure/1.0/taxonomies/subjects/terms?includeDisabledTerms=true", req.URL.String(), fmt.Sprintf("Expected url incorrect"))
 	return &d.resp, d.err
 }
