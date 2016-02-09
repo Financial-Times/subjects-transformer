@@ -1,22 +1,21 @@
-FROM alpine
+FROM alpine:3.3
 
-ENV GOPATH /gopath
-ENV REPO_PATH "github.com/Financial-Times/subjects-transformer"
+ADD *.go /subjects-transformer/
+ADD handlers/*.go /subjects-transformer/handlers/
+ADD service/* /subjects-transformer/service/
+ADD model/*.go /subjects-transformer/model/
 
 RUN apk add --update bash \
   && apk --update add git bzr \
-  && echo "http://dl-4.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories \
   && apk --update add go \
-  && mkdir -p $GOPATH/src/${REPO_PATH}
-
-ADD . $GOPATH/src/$REPO_PATH/
-
-RUN cd $GOPATH/src/${REPO_PATH} \
+  && export GOPATH=/gopath \
+  && REPO_PATH="github.com/Financial-Times/subjects-transformer" \
+  && mkdir -p $GOPATH/src/${REPO_PATH} \
+  && cp -r subjects-transformer/* $GOPATH/src/${REPO_PATH} \
+  && cd $GOPATH/src/${REPO_PATH} \
   && go get -t ./... \
-  && go test ./... \
   && go build \
-  && mv subjects-transformer /subjects-transformer \
+  && mv subjects-transformer /app \
   && apk del go git bzr \
   && rm -rf $GOPATH /var/cache/apk/*
-
-CMD /subjects-transformer -baseUrl=$BASE_URL -structureServiceBaseUrl=$STRUCTURE_SERVICE_BASE_URL -structureServiceUsername=$USER -structureServicePassword=$PASS -structureServicePrincipalHeader=$PRINCIPAL_HEADER
+CMD [ "/app" ]
