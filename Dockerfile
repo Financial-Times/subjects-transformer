@@ -1,9 +1,6 @@
 FROM alpine:3.3
 
-ADD *.go /subjects-transformer/
-ADD handlers/*.go /subjects-transformer/handlers/
-ADD service/* /subjects-transformer/service/
-ADD model/*.go /subjects-transformer/model/
+ADD . /subjects-transformer/
 
 RUN apk add --update bash \
   && apk --update add git bzr \
