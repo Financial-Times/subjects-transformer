@@ -8,7 +8,7 @@ import (
 
 func TestTransform(t *testing.T) {
 	assert := assert.New(t)
-	transformer := SubjectTransformer{}
+	transformer := subjectTransformer{}
 	tests := []struct {
 		name    string
 		term    Term

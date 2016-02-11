@@ -9,44 +9,44 @@ import (
 )
 
 type Repository interface {
-	getSubjectsTaxonomy() (Taxonomy, error)
+	getSubjectsTaxonomy() (taxonomy, error)
 }
 
 type TmeRepository struct {
-	httpClient              Client
+	httpClient              httpClient
 	principalHeader         string
 	structureServiceBaseUrl string
 }
 
-func NewTmeRepository(client Client, structureServiceBaseUrl string, principalHeader string) Repository {
+func NewTmeRepository(client httpClient, structureServiceBaseUrl string, principalHeader string) Repository {
 	return &TmeRepository{httpClient: client, principalHeader: principalHeader, structureServiceBaseUrl: structureServiceBaseUrl}
 }
 
-func (t *TmeRepository) getSubjectsTaxonomy() (Taxonomy, error) {
+func (t *TmeRepository) getSubjectsTaxonomy() (taxonomy, error) {
 	req, err := http.NewRequest("GET", t.structureServiceBaseUrl+"/metadata-services/structure/1.0/taxonomies/subjects/terms?includeDisabledTerms=true", nil)
 	if err != nil {
-		return Taxonomy{}, err
+		return taxonomy{}, err
 	}
 	req.Header.Set("ClientUserPrincipal", t.principalHeader)
 	resp, err := t.httpClient.Do(req)
 	if err != nil {
-		return Taxonomy{}, err
+		return taxonomy{}, err
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return Taxonomy{}, errors.New(fmt.Sprintf("Structure service returned %d", resp.StatusCode))
+		return taxonomy{}, errors.New(fmt.Sprintf("Structure service returned %d", resp.StatusCode))
 	}
 
 	contents, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return Taxonomy{}, err
+		return taxonomy{}, err
 	}
 
-	tax := Taxonomy{}
+	tax := taxonomy{}
 	err = xml.Unmarshal(contents, &tax)
 	if err != nil {
-		return Taxonomy{}, err
+		return taxonomy{}, err
 	}
 	return tax, nil
 }

@@ -59,14 +59,14 @@ func main() {
 	app.Action = func() {
 		c := digest.NewClient(*username, *password)
 		c.Timeout(10 * time.Second)
-		s, err := NewSubjectService(NewTmeRepository(c, *structureServiceBaseUrl, *principalHeader), SubjectTransformer{}, *baseUrl)
+		s, err := newSubjectService(NewTmeRepository(c, *structureServiceBaseUrl, *principalHeader), subjectTransformer{}, *baseUrl)
 		if err != nil {
 			log.Errorf("Error while creating SubjectsService: [%v]", err.Error())
 		}
-		h := NewSubjectsHandler(s)
+		h := newSubjectsHandler(s)
 		m := mux.NewRouter()
-		m.HandleFunc("/transformers/subjects", h.GetSubjects).Methods("GET")
-		m.HandleFunc("/transformers/subjects/{uuid}", h.GetSubjectByUuid).Methods("GET")
+		m.HandleFunc("/transformers/subjects", h.getSubjects).Methods("GET")
+		m.HandleFunc("/transformers/subjects/{uuid}", h.getSubjectByUuid).Methods("GET")
 		http.Handle("/", m)
 
 		log.Printf("listening on %d", *port)

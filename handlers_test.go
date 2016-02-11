@@ -18,7 +18,7 @@ func TestHandlers(t *testing.T) {
 	tests := []struct {
 		name         string
 		req          *http.Request
-		dummyService SubjectService
+		dummyService subjectService
 		statusCode   int
 		contentType  string // Contents of the Content-Type header
 		body         string
@@ -45,11 +45,11 @@ func newRequest(method, url string) *http.Request {
 	return req
 }
 
-func router(s SubjectService) *mux.Router {
+func router(s subjectService) *mux.Router {
 	m := mux.NewRouter()
-	h := NewSubjectsHandler(s)
-	m.HandleFunc("/transformers/subjects", h.GetSubjects).Methods("GET")
-	m.HandleFunc("/transformers/subjects/{uuid}", h.GetSubjectByUuid).Methods("GET")
+	h := newSubjectsHandler(s)
+	m.HandleFunc("/transformers/subjects", h.getSubjects).Methods("GET")
+	m.HandleFunc("/transformers/subjects/{uuid}", h.getSubjectByUuid).Methods("GET")
 	return m
 }
 
@@ -58,7 +58,7 @@ type dummyService struct {
 	subjects []Subject
 }
 
-func (s *dummyService) GetSubjects() ([]SubjectLink, bool) {
+func (s *dummyService) getSubjects() ([]SubjectLink, bool) {
 	var subjectLinks []SubjectLink
 	for _, sub := range s.subjects {
 		subjectLinks = append(subjectLinks, SubjectLink{ApiUrl: "http://localhost:8080/transformers/subjects/" + sub.UUID})
@@ -66,6 +66,6 @@ func (s *dummyService) GetSubjects() ([]SubjectLink, bool) {
 	return subjectLinks, s.found
 }
 
-func (s *dummyService) GetSubjectByUuid(uuid string) (Subject, bool) {
+func (s *dummyService) getSubjectByUuid(uuid string) (Subject, bool) {
 	return s.subjects[0], s.found
 }

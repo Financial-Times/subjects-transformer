@@ -17,21 +17,21 @@ func TestGetSubjectsTaxonomy(t *testing.T) {
 	tests := []struct {
 		name string
 		repo Repository
-		tax  Taxonomy
+		tax  taxonomy
 		err  error
 	}{
 		{"Success", repo(dummyClient{assert: assert, structureServiceBaseUrl: "http://metadata.internal.ft.com:83", principalHeader: "someHeader",
 			resp: http.Response{StatusCode: http.StatusOK, Body: ioutil.NopCloser(subjectsXml)}}),
-			Taxonomy{Terms: []Term{Term{CanonicalName: "Company News", Id: "MQ==-U3ViamVjdHM=", Children: Children{[]Term{Term{CanonicalName: "Bankruptcy & Receivership", Id: "Mg==-U3ViamVjdHM="}}}}}}, nil},
+			taxonomy{Terms: []Term{Term{CanonicalName: "Company News", Id: "MQ==-U3ViamVjdHM=", Children: Children{[]Term{Term{CanonicalName: "Bankruptcy & Receivership", Id: "Mg==-U3ViamVjdHM="}}}}}}, nil},
 		{"Error", repo(dummyClient{assert: assert, structureServiceBaseUrl: "http://metadata.internal.ft.com:83", principalHeader: "someHeader",
 			resp: http.Response{StatusCode: http.StatusOK, Body: ioutil.NopCloser(subjectsXml)}, err: errors.New("Some error")}),
-			Taxonomy{}, errors.New("Some error")},
+			taxonomy{}, errors.New("Some error")},
 		{"Non 200 from structure service", repo(dummyClient{assert: assert, structureServiceBaseUrl: "http://metadata.internal.ft.com:83", principalHeader: "someHeader",
 			resp: http.Response{StatusCode: http.StatusBadRequest, Body: ioutil.NopCloser(subjectsXml)}}),
-			Taxonomy{}, errors.New("Structure service returned 400")},
+			taxonomy{}, errors.New("Structure service returned 400")},
 		{"Unmarshalling error", repo(dummyClient{assert: assert, structureServiceBaseUrl: "http://metadata.internal.ft.com:83", principalHeader: "someHeader",
 			resp: http.Response{StatusCode: http.StatusOK, Body: ioutil.NopCloser(bytes.NewReader([]byte("Non xml")))}}),
-			Taxonomy{}, errors.New("EOF")},
+			taxonomy{}, errors.New("EOF")},
 	}
 
 	for _, test := range tests {

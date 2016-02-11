@@ -4,24 +4,24 @@ import (
 	"net/http"
 )
 
-type Client interface {
+type httpClient interface {
 	Do(req *http.Request) (resp *http.Response, err error)
 }
 
-type SubjectService interface {
-	GetSubjects() ([]SubjectLink, bool)
-	GetSubjectByUuid(uuid string) (Subject, bool)
+type subjectService interface {
+	getSubjects() ([]SubjectLink, bool)
+	getSubjectByUuid(uuid string) (Subject, bool)
 }
 
 type subjectServiceImpl struct {
 	repository   Repository
-	transformer  SubjectTransformer
+	transformer  subjectTransformer
 	baseUrl      string
 	subjectsMap  map[string]Subject
 	subjectLinks []SubjectLink
 }
 
-func NewSubjectService(repo Repository, transformer SubjectTransformer, baseUrl string) (SubjectService, error) {
+func newSubjectService(repo Repository, transformer subjectTransformer, baseUrl string) (subjectService, error) {
 
 	s := &subjectServiceImpl{repository: repo, transformer: transformer, baseUrl: baseUrl}
 	err := s.init()
@@ -41,14 +41,14 @@ func (s *subjectServiceImpl) init() error {
 	return nil
 }
 
-func (s *subjectServiceImpl) GetSubjects() ([]SubjectLink, bool) {
+func (s *subjectServiceImpl) getSubjects() ([]SubjectLink, bool) {
 	if len(s.subjectLinks) > 0 {
 		return s.subjectLinks, true
 	}
 	return s.subjectLinks, false
 }
 
-func (s *subjectServiceImpl) GetSubjectByUuid(uuid string) (Subject, bool) {
+func (s *subjectServiceImpl) getSubjectByUuid(uuid string) (Subject, bool) {
 	subject, found := s.subjectsMap[uuid]
 	return subject, found
 }

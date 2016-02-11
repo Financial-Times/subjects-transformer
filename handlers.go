@@ -8,24 +8,24 @@ import (
 	"net/http"
 )
 
-type SubjectsHandler struct {
-	service SubjectService
+type subjectsHandler struct {
+	service subjectService
 }
 
-func NewSubjectsHandler(service SubjectService) SubjectsHandler {
-	return SubjectsHandler{service: service}
+func newSubjectsHandler(service subjectService) subjectsHandler {
+	return subjectsHandler{service: service}
 }
 
-func (h *SubjectsHandler) GetSubjects(writer http.ResponseWriter, req *http.Request) {
-	obj, found := h.service.GetSubjects()
+func (h *subjectsHandler) getSubjects(writer http.ResponseWriter, req *http.Request) {
+	obj, found := h.service.getSubjects()
 	writeJsonResponse(obj, found, writer)
 }
 
-func (h *SubjectsHandler) GetSubjectByUuid(writer http.ResponseWriter, req *http.Request) {
+func (h *subjectsHandler) getSubjectByUuid(writer http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 	uuid := vars["uuid"]
 
-	obj, found := h.service.GetSubjectByUuid(uuid)
+	obj, found := h.service.getSubjectByUuid(uuid)
 	writeJsonResponse(obj, found, writer)
 }
 
