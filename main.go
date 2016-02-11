@@ -37,13 +37,13 @@ func main() {
 		Desc:   "Structure service principal header used for authentication",
 		EnvVar: "PRINCIPAL_HEADER",
 	})
-	baseUrl := app.String(cli.StringOpt{
+	baseURL := app.String(cli.StringOpt{
 		Name:   "base-url",
 		Value:  "http://localhost:8080/transformers/subjects/",
 		Desc:   "Base url",
 		EnvVar: "BASE_URL",
 	})
-	structureServiceBaseUrl := app.String(cli.StringOpt{
+	structureServiceBaseURL := app.String(cli.StringOpt{
 		Name:   "structure-service-base-url",
 		Value:  "http://metadata.internal.ft.com:83",
 		Desc:   "Structure service base url",
@@ -59,14 +59,14 @@ func main() {
 	app.Action = func() {
 		c := digest.NewClient(*username, *password)
 		c.Timeout(10 * time.Second)
-		s, err := newSubjectService(newTmeRepository(c, *structureServiceBaseUrl, *principalHeader), subjectTransformer{}, *baseUrl)
+		s, err := newSubjectService(newTmeRepository(c, *structureServiceBaseURL, *principalHeader), subjectTransformer{}, *baseURL)
 		if err != nil {
 			log.Errorf("Error while creating SubjectsService: [%v]", err.Error())
 		}
 		h := newSubjectsHandler(s)
 		m := mux.NewRouter()
 		m.HandleFunc("/transformers/subjects", h.getSubjects).Methods("GET")
-		m.HandleFunc("/transformers/subjects/{uuid}", h.getSubjectByUuid).Methods("GET")
+		m.HandleFunc("/transformers/subjects/{uuid}", h.getSubjectByUUID).Methods("GET")
 		http.Handle("/", m)
 
 		log.Printf("listening on %d", *port)

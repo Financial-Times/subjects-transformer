@@ -10,20 +10,20 @@ type httpClient interface {
 
 type subjectService interface {
 	getSubjects() ([]subjectLink, bool)
-	getSubjectByUuid(uuid string) (subject, bool)
+	getSubjectByUUID(uuid string) (subject, bool)
 }
 
 type subjectServiceImpl struct {
 	repository   repository
 	transformer  subjectTransformer
-	baseUrl      string
+	baseURL      string
 	subjectsMap  map[string]subject
 	subjectLinks []subjectLink
 }
 
-func newSubjectService(repo repository, transformer subjectTransformer, baseUrl string) (subjectService, error) {
+func newSubjectService(repo repository, transformer subjectTransformer, baseURL string) (subjectService, error) {
 
-	s := &subjectServiceImpl{repository: repo, transformer: transformer, baseUrl: baseUrl}
+	s := &subjectServiceImpl{repository: repo, transformer: transformer, baseURL: baseURL}
 	err := s.init()
 	if err != nil {
 		return &subjectServiceImpl{}, err
@@ -48,7 +48,7 @@ func (s *subjectServiceImpl) getSubjects() ([]subjectLink, bool) {
 	return s.subjectLinks, false
 }
 
-func (s *subjectServiceImpl) getSubjectByUuid(uuid string) (subject, bool) {
+func (s *subjectServiceImpl) getSubjectByUUID(uuid string) (subject, bool) {
 	subject, found := s.subjectsMap[uuid]
 	return subject, found
 }
@@ -57,7 +57,7 @@ func (s *subjectServiceImpl) initSubjectsMap(terms []term) {
 	for _, t := range terms {
 		sub := s.transformer.transform(t)
 		s.subjectsMap[sub.UUID] = sub
-		s.subjectLinks = append(s.subjectLinks, subjectLink{ApiUrl: s.baseUrl + sub.UUID})
+		s.subjectLinks = append(s.subjectLinks, subjectLink{APIURL: s.baseURL + sub.UUID})
 		s.initSubjectsMap(t.Children.Terms)
 	}
 }

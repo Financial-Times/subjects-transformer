@@ -15,15 +15,15 @@ type repository interface {
 type tmeRepository struct {
 	httpClient              httpClient
 	principalHeader         string
-	structureServiceBaseUrl string
+	structureServiceBaseURL string
 }
 
-func newTmeRepository(client httpClient, structureServiceBaseUrl string, principalHeader string) repository {
-	return &tmeRepository{httpClient: client, principalHeader: principalHeader, structureServiceBaseUrl: structureServiceBaseUrl}
+func newTmeRepository(client httpClient, structureServiceBaseURL string, principalHeader string) repository {
+	return &tmeRepository{httpClient: client, principalHeader: principalHeader, structureServiceBaseURL: structureServiceBaseURL}
 }
 
 func (t *tmeRepository) getSubjectsTaxonomy() (taxonomy, error) {
-	req, err := http.NewRequest("GET", t.structureServiceBaseUrl+"/metadata-services/structure/1.0/taxonomies/subjects/terms?includeDisabledTerms=true", nil)
+	req, err := http.NewRequest("GET", t.structureServiceBaseURL+"/metadata-services/structure/1.0/taxonomies/subjects/terms?includeDisabledTerms=true", nil)
 	if err != nil {
 		return taxonomy{}, err
 	}

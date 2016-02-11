@@ -13,23 +13,23 @@ import (
 
 func TestGetSubjectsTaxonomy(t *testing.T) {
 	assert := assert.New(t)
-	subjectsXml, _ := os.Open("sample_subjects.xml")
+	subjectsXML, _ := os.Open("sample_subjects.xml")
 	tests := []struct {
 		name string
 		repo repository
 		tax  taxonomy
 		err  error
 	}{
-		{"Success", repo(dummyClient{assert: assert, structureServiceBaseUrl: "http://metadata.internal.ft.com:83", principalHeader: "someHeader",
-			resp: http.Response{StatusCode: http.StatusOK, Body: ioutil.NopCloser(subjectsXml)}}),
-			taxonomy{Terms: []term{term{CanonicalName: "Company News", Id: "MQ==-U3ViamVjdHM=", Children: children{[]term{term{CanonicalName: "Bankruptcy & Receivership", Id: "Mg==-U3ViamVjdHM="}}}}}}, nil},
-		{"Error", repo(dummyClient{assert: assert, structureServiceBaseUrl: "http://metadata.internal.ft.com:83", principalHeader: "someHeader",
-			resp: http.Response{StatusCode: http.StatusOK, Body: ioutil.NopCloser(subjectsXml)}, err: errors.New("Some error")}),
+		{"Success", repo(dummyClient{assert: assert, structureServiceBaseURL: "http://metadata.internal.ft.com:83", principalHeader: "someHeader",
+			resp: http.Response{StatusCode: http.StatusOK, Body: ioutil.NopCloser(subjectsXML)}}),
+			taxonomy{Terms: []term{term{CanonicalName: "Company News", ID: "MQ==-U3ViamVjdHM=", Children: children{[]term{term{CanonicalName: "Bankruptcy & Receivership", ID: "Mg==-U3ViamVjdHM="}}}}}}, nil},
+		{"Error", repo(dummyClient{assert: assert, structureServiceBaseURL: "http://metadata.internal.ft.com:83", principalHeader: "someHeader",
+			resp: http.Response{StatusCode: http.StatusOK, Body: ioutil.NopCloser(subjectsXML)}, err: errors.New("Some error")}),
 			taxonomy{}, errors.New("Some error")},
-		{"Non 200 from structure service", repo(dummyClient{assert: assert, structureServiceBaseUrl: "http://metadata.internal.ft.com:83", principalHeader: "someHeader",
-			resp: http.Response{StatusCode: http.StatusBadRequest, Body: ioutil.NopCloser(subjectsXml)}}),
+		{"Non 200 from structure service", repo(dummyClient{assert: assert, structureServiceBaseURL: "http://metadata.internal.ft.com:83", principalHeader: "someHeader",
+			resp: http.Response{StatusCode: http.StatusBadRequest, Body: ioutil.NopCloser(subjectsXML)}}),
 			taxonomy{}, errors.New("Structure service returned 400")},
-		{"Unmarshalling error", repo(dummyClient{assert: assert, structureServiceBaseUrl: "http://metadata.internal.ft.com:83", principalHeader: "someHeader",
+		{"Unmarshalling error", repo(dummyClient{assert: assert, structureServiceBaseURL: "http://metadata.internal.ft.com:83", principalHeader: "someHeader",
 			resp: http.Response{StatusCode: http.StatusOK, Body: ioutil.NopCloser(bytes.NewReader([]byte("Non xml")))}}),
 			taxonomy{}, errors.New("EOF")},
 	}
@@ -43,7 +43,7 @@ func TestGetSubjectsTaxonomy(t *testing.T) {
 }
 
 func repo(c dummyClient) repository {
-	return &tmeRepository{httpClient: &c, principalHeader: c.principalHeader, structureServiceBaseUrl: c.structureServiceBaseUrl}
+	return &tmeRepository{httpClient: &c, principalHeader: c.principalHeader, structureServiceBaseURL: c.structureServiceBaseURL}
 }
 
 type dummyClient struct {
@@ -51,11 +51,11 @@ type dummyClient struct {
 	resp                    http.Response
 	err                     error
 	principalHeader         string
-	structureServiceBaseUrl string
+	structureServiceBaseURL string
 }
 
 func (d *dummyClient) Do(req *http.Request) (resp *http.Response, err error) {
 	d.assert.Equal(d.principalHeader, req.Header.Get("ClientUserPrincipal"), fmt.Sprintf("Expected ClientUserPrincipal header incorrect"))
-	d.assert.Equal(d.structureServiceBaseUrl+"/metadata-services/structure/1.0/taxonomies/subjects/terms?includeDisabledTerms=true", req.URL.String(), fmt.Sprintf("Expected url incorrect"))
+	d.assert.Equal(d.structureServiceBaseURL+"/metadata-services/structure/1.0/taxonomies/subjects/terms?includeDisabledTerms=true", req.URL.String(), fmt.Sprintf("Expected url incorrect"))
 	return &d.resp, d.err
 }

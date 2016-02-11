@@ -6,7 +6,7 @@ type taxonomy struct {
 
 type term struct {
 	CanonicalName string   `xml:"canonicalName"`
-	Id            string   `xml:"id,attr"`
+	ID            string   `xml:"id,attr"`
 	Children      children `xml:"children"`
 }
 

@@ -8,5 +8,5 @@ type subject struct {
 }
 
 type subjectLink struct {
-	ApiUrl string `json:"apiUrl"`
+	APIURL string `json:"apiUrl"`
 }
