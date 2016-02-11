@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/xml"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -35,7 +34,7 @@ func (t *tmeRepository) getSubjectsTaxonomy() (taxonomy, error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return taxonomy{}, errors.New(fmt.Sprintf("Structure service returned %d", resp.StatusCode))
+		return taxonomy{}, fmt.Errorf("Structure service returned %d", resp.StatusCode)
 	}
 
 	contents, err := ioutil.ReadAll(resp.Body)
