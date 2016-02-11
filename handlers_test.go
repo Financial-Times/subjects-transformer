@@ -23,10 +23,10 @@ func TestHandlers(t *testing.T) {
 		contentType  string // Contents of the Content-Type header
 		body         string
 	}{
-		{"Success - get subject by uuid", newRequest("GET", fmt.Sprintf("/transformers/subjects/%s", uuid)), &dummyService{found: true, subjects: []Subject{Subject{UUID: uuid, CanonicalName: "Metals Markets", TmeIdentifier: "MTE3-U3ViamVjdHM=", Type: "Subject"}}}, http.StatusOK, "application/json", getSubjectByUuidResponse},
-		{"Not found - get subject by uuid", newRequest("GET", fmt.Sprintf("/transformers/subjects/%s", uuid)), &dummyService{found: false, subjects: []Subject{Subject{}}}, http.StatusNotFound, "application/json", ""},
-		{"Success - get subjects", newRequest("GET", "/transformers/subjects"), &dummyService{found: true, subjects: []Subject{Subject{UUID: uuid}}}, http.StatusOK, "application/json", getSubjectsResponse},
-		{"Not found - get subjects", newRequest("GET", "/transformers/subjects"), &dummyService{found: false, subjects: []Subject{}}, http.StatusNotFound, "application/json", ""},
+		{"Success - get subject by uuid", newRequest("GET", fmt.Sprintf("/transformers/subjects/%s", uuid)), &dummyService{found: true, subjects: []subject{subject{UUID: uuid, CanonicalName: "Metals Markets", TmeIdentifier: "MTE3-U3ViamVjdHM=", Type: "Subject"}}}, http.StatusOK, "application/json", getSubjectByUuidResponse},
+		{"Not found - get subject by uuid", newRequest("GET", fmt.Sprintf("/transformers/subjects/%s", uuid)), &dummyService{found: false, subjects: []subject{subject{}}}, http.StatusNotFound, "application/json", ""},
+		{"Success - get subjects", newRequest("GET", "/transformers/subjects"), &dummyService{found: true, subjects: []subject{subject{UUID: uuid}}}, http.StatusOK, "application/json", getSubjectsResponse},
+		{"Not found - get subjects", newRequest("GET", "/transformers/subjects"), &dummyService{found: false, subjects: []subject{}}, http.StatusNotFound, "application/json", ""},
 	}
 
 	for _, test := range tests {
@@ -55,17 +55,17 @@ func router(s subjectService) *mux.Router {
 
 type dummyService struct {
 	found    bool
-	subjects []Subject
+	subjects []subject
 }
 
-func (s *dummyService) getSubjects() ([]SubjectLink, bool) {
-	var subjectLinks []SubjectLink
+func (s *dummyService) getSubjects() ([]subjectLink, bool) {
+	var subjectLinks []subjectLink
 	for _, sub := range s.subjects {
-		subjectLinks = append(subjectLinks, SubjectLink{ApiUrl: "http://localhost:8080/transformers/subjects/" + sub.UUID})
+		subjectLinks = append(subjectLinks, subjectLink{ApiUrl: "http://localhost:8080/transformers/subjects/" + sub.UUID})
 	}
 	return subjectLinks, s.found
 }
 
-func (s *dummyService) getSubjectByUuid(uuid string) (Subject, bool) {
+func (s *dummyService) getSubjectByUuid(uuid string) (subject, bool) {
 	return s.subjects[0], s.found
 }

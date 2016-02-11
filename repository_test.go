@@ -16,13 +16,13 @@ func TestGetSubjectsTaxonomy(t *testing.T) {
 	subjectsXml, _ := os.Open("sample_subjects.xml")
 	tests := []struct {
 		name string
-		repo Repository
+		repo repository
 		tax  taxonomy
 		err  error
 	}{
 		{"Success", repo(dummyClient{assert: assert, structureServiceBaseUrl: "http://metadata.internal.ft.com:83", principalHeader: "someHeader",
 			resp: http.Response{StatusCode: http.StatusOK, Body: ioutil.NopCloser(subjectsXml)}}),
-			taxonomy{Terms: []Term{Term{CanonicalName: "Company News", Id: "MQ==-U3ViamVjdHM=", Children: Children{[]Term{Term{CanonicalName: "Bankruptcy & Receivership", Id: "Mg==-U3ViamVjdHM="}}}}}}, nil},
+			taxonomy{Terms: []term{term{CanonicalName: "Company News", Id: "MQ==-U3ViamVjdHM=", Children: children{[]term{term{CanonicalName: "Bankruptcy & Receivership", Id: "Mg==-U3ViamVjdHM="}}}}}}, nil},
 		{"Error", repo(dummyClient{assert: assert, structureServiceBaseUrl: "http://metadata.internal.ft.com:83", principalHeader: "someHeader",
 			resp: http.Response{StatusCode: http.StatusOK, Body: ioutil.NopCloser(subjectsXml)}, err: errors.New("Some error")}),
 			taxonomy{}, errors.New("Some error")},
@@ -42,8 +42,8 @@ func TestGetSubjectsTaxonomy(t *testing.T) {
 
 }
 
-func repo(c dummyClient) Repository {
-	return &TmeRepository{httpClient: &c, principalHeader: c.principalHeader, structureServiceBaseUrl: c.structureServiceBaseUrl}
+func repo(c dummyClient) repository {
+	return &tmeRepository{httpClient: &c, principalHeader: c.principalHeader, structureServiceBaseUrl: c.structureServiceBaseUrl}
 }
 
 type dummyClient struct {

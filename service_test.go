@@ -13,15 +13,15 @@ func TestGetSubjects(t *testing.T) {
 		name     string
 		baseUrl  string
 		tax      taxonomy
-		subjects []SubjectLink
+		subjects []subjectLink
 		found    bool
 		err      error
 	}{
 		{"Success", "localhost:8080/transformers/subjects/",
-			taxonomy{Terms: []Term{Term{CanonicalName: "Company News", Id: "MQ==-U3ViamVjdHM=", Children: Children{[]Term{Term{CanonicalName: "Bankruptcy & Receivership", Id: "Mg==-U3ViamVjdHM="}}}}}},
-			[]SubjectLink{SubjectLink{ApiUrl: "localhost:8080/transformers/subjects/29b56d8f-3528-37ae-9551-c50a0d37d4bb"},
-				SubjectLink{ApiUrl: "localhost:8080/transformers/subjects/6725e13a-276d-3096-91fe-bf7db924ff03"}}, true, nil},
-		{"Error on init", "localhost:8080/transformers/subjects/", taxonomy{}, []SubjectLink(nil), false, errors.New("Error getting taxonomy")},
+			taxonomy{Terms: []term{term{CanonicalName: "Company News", Id: "MQ==-U3ViamVjdHM=", Children: children{[]term{term{CanonicalName: "Bankruptcy & Receivership", Id: "Mg==-U3ViamVjdHM="}}}}}},
+			[]subjectLink{subjectLink{ApiUrl: "localhost:8080/transformers/subjects/29b56d8f-3528-37ae-9551-c50a0d37d4bb"},
+				subjectLink{ApiUrl: "localhost:8080/transformers/subjects/6725e13a-276d-3096-91fe-bf7db924ff03"}}, true, nil},
+		{"Error on init", "localhost:8080/transformers/subjects/", taxonomy{}, []subjectLink(nil), false, errors.New("Error getting taxonomy")},
 	}
 
 	for _, test := range tests {
@@ -40,15 +40,15 @@ func TestGetSubjectByUuid(t *testing.T) {
 		name    string
 		tax     taxonomy
 		uuid    string
-		subject Subject
+		subject subject
 		found   bool
 		err     error
 	}{
-		{"Success", taxonomy{Terms: []Term{Term{CanonicalName: "Company News", Id: "MQ==-U3ViamVjdHM=", Children: Children{[]Term{Term{CanonicalName: "Bankruptcy & Receivership", Id: "Mg==-U3ViamVjdHM="}}}}}},
-			"29b56d8f-3528-37ae-9551-c50a0d37d4bb", Subject{UUID: "29b56d8f-3528-37ae-9551-c50a0d37d4bb", CanonicalName: "Company News", TmeIdentifier: "MQ==-U3ViamVjdHM=", Type: "Subject"}, true, nil},
-		{"Not found", taxonomy{Terms: []Term{Term{CanonicalName: "Company News", Id: "MQ==-U3ViamVjdHM=", Children: Children{[]Term{Term{CanonicalName: "Bankruptcy & Receivership", Id: "Mg==-U3ViamVjdHM="}}}}}},
-			"some uuid", Subject{}, false, nil},
-		{"Error on init", taxonomy{}, "some uuid", Subject{}, false, errors.New("Error getting taxonomy")},
+		{"Success", taxonomy{Terms: []term{term{CanonicalName: "Company News", Id: "MQ==-U3ViamVjdHM=", Children: children{[]term{term{CanonicalName: "Bankruptcy & Receivership", Id: "Mg==-U3ViamVjdHM="}}}}}},
+			"29b56d8f-3528-37ae-9551-c50a0d37d4bb", subject{UUID: "29b56d8f-3528-37ae-9551-c50a0d37d4bb", CanonicalName: "Company News", TmeIdentifier: "MQ==-U3ViamVjdHM=", Type: "Subject"}, true, nil},
+		{"Not found", taxonomy{Terms: []term{term{CanonicalName: "Company News", Id: "MQ==-U3ViamVjdHM=", Children: children{[]term{term{CanonicalName: "Bankruptcy & Receivership", Id: "Mg==-U3ViamVjdHM="}}}}}},
+			"some uuid", subject{}, false, nil},
+		{"Error on init", taxonomy{}, "some uuid", subject{}, false, errors.New("Error getting taxonomy")},
 	}
 
 	for _, test := range tests {

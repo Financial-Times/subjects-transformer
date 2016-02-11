@@ -59,7 +59,7 @@ func main() {
 	app.Action = func() {
 		c := digest.NewClient(*username, *password)
 		c.Timeout(10 * time.Second)
-		s, err := newSubjectService(NewTmeRepository(c, *structureServiceBaseUrl, *principalHeader), subjectTransformer{}, *baseUrl)
+		s, err := newSubjectService(newTmeRepository(c, *structureServiceBaseUrl, *principalHeader), subjectTransformer{}, *baseUrl)
 		if err != nil {
 			log.Errorf("Error while creating SubjectsService: [%v]", err.Error())
 		}

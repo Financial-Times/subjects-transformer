@@ -1,15 +1,15 @@
 package main
 
 type taxonomy struct {
-	Terms []Term `xml:"term"`
+	Terms []term `xml:"term"`
 }
 
-type Term struct {
+type term struct {
 	CanonicalName string   `xml:"canonicalName"`
 	Id            string   `xml:"id,attr"`
-	Children      Children `xml:"children"`
+	Children      children `xml:"children"`
 }
 
-type Children struct {
-	Terms []Term `xml:"term"`
+type children struct {
+	Terms []term `xml:"term"`
 }

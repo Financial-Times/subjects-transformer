@@ -3,11 +3,11 @@ package main
 type subjectTransformer struct {
 }
 
-func (t *subjectTransformer) transform(term Term) Subject {
-	return Subject{
-		UUID:          NewNameUUIDFromBytes([]byte(term.Id)).String(),
-		CanonicalName: term.CanonicalName,
-		TmeIdentifier: term.Id,
+func (tr *subjectTransformer) transform(t term) subject {
+	return subject{
+		UUID:          NewNameUUIDFromBytes([]byte(t.Id)).String(),
+		CanonicalName: t.CanonicalName,
+		TmeIdentifier: t.Id,
 		Type:          "Subject",
 	}
 }

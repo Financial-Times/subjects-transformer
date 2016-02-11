@@ -8,21 +8,21 @@ import (
 	"net/http"
 )
 
-type Repository interface {
+type repository interface {
 	getSubjectsTaxonomy() (taxonomy, error)
 }
 
-type TmeRepository struct {
+type tmeRepository struct {
 	httpClient              httpClient
 	principalHeader         string
 	structureServiceBaseUrl string
 }
 
-func NewTmeRepository(client httpClient, structureServiceBaseUrl string, principalHeader string) Repository {
-	return &TmeRepository{httpClient: client, principalHeader: principalHeader, structureServiceBaseUrl: structureServiceBaseUrl}
+func newTmeRepository(client httpClient, structureServiceBaseUrl string, principalHeader string) repository {
+	return &tmeRepository{httpClient: client, principalHeader: principalHeader, structureServiceBaseUrl: structureServiceBaseUrl}
 }
 
-func (t *TmeRepository) getSubjectsTaxonomy() (taxonomy, error) {
+func (t *tmeRepository) getSubjectsTaxonomy() (taxonomy, error) {
 	req, err := http.NewRequest("GET", t.structureServiceBaseUrl+"/metadata-services/structure/1.0/taxonomies/subjects/terms?includeDisabledTerms=true", nil)
 	if err != nil {
 		return taxonomy{}, err
