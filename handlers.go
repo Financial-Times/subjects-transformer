@@ -1,19 +1,18 @@
-package handlers
+package main
 
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/Financial-Times/subjects-transformer/service"
 	log "github.com/Sirupsen/logrus"
 	"github.com/gorilla/mux"
 	"net/http"
 )
 
 type SubjectsHandler struct {
-	service service.SubjectService
+	service SubjectService
 }
 
-func NewSubjectsHandler(service service.SubjectService) SubjectsHandler {
+func NewSubjectsHandler(service SubjectService) SubjectsHandler {
 	return SubjectsHandler{service: service}
 }
 

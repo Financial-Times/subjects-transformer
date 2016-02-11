@@ -1,4 +1,4 @@
-package model
+package main
 
 type Subject struct {
 	UUID          string `json:"uuid"`

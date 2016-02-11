@@ -4,8 +4,6 @@ import (
 	"fmt"
 	digest "github.com/FeNoMeNa/goha"
 	"github.com/Financial-Times/http-handlers-go"
-	"github.com/Financial-Times/subjects-transformer/handlers"
-	"github.com/Financial-Times/subjects-transformer/service"
 	log "github.com/Sirupsen/logrus"
 	"github.com/gorilla/mux"
 	"github.com/jawher/mow.cli"
@@ -61,11 +59,11 @@ func main() {
 	app.Action = func() {
 		c := digest.NewClient(*username, *password)
 		c.Timeout(10 * time.Second)
-		s, err := service.NewSubjectService(service.NewTmeRepository(c, *structureServiceBaseUrl, *principalHeader), service.SubjectTransformer{}, *baseUrl)
+		s, err := NewSubjectService(NewTmeRepository(c, *structureServiceBaseUrl, *principalHeader), SubjectTransformer{}, *baseUrl)
 		if err != nil {
 			log.Errorf("Error while creating SubjectsService: [%v]", err.Error())
 		}
-		h := handlers.NewSubjectsHandler(s)
+		h := NewSubjectsHandler(s)
 		m := mux.NewRouter()
 		m.HandleFunc("/transformers/subjects", h.GetSubjects).Methods("GET")
 		m.HandleFunc("/transformers/subjects/{uuid}", h.GetSubjectByUuid).Methods("GET")

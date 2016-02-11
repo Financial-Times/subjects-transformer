@@ -1,10 +1,9 @@
-package service
+package main
 
 import (
 	"bytes"
 	"errors"
 	"fmt"
-	"github.com/Financial-Times/subjects-transformer/model"
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"
@@ -18,21 +17,21 @@ func TestGetSubjectsTaxonomy(t *testing.T) {
 	tests := []struct {
 		name string
 		repo Repository
-		tax  model.Taxonomy
+		tax  Taxonomy
 		err  error
 	}{
 		{"Success", repo(dummyClient{assert: assert, structureServiceBaseUrl: "http://metadata.internal.ft.com:83", principalHeader: "someHeader",
 			resp: http.Response{StatusCode: http.StatusOK, Body: ioutil.NopCloser(subjectsXml)}}),
-			model.Taxonomy{Terms: []model.Term{model.Term{CanonicalName: "Company News", Id: "MQ==-U3ViamVjdHM=", Children: model.Children{[]model.Term{model.Term{CanonicalName: "Bankruptcy & Receivership", Id: "Mg==-U3ViamVjdHM="}}}}}}, nil},
+			Taxonomy{Terms: []Term{Term{CanonicalName: "Company News", Id: "MQ==-U3ViamVjdHM=", Children: Children{[]Term{Term{CanonicalName: "Bankruptcy & Receivership", Id: "Mg==-U3ViamVjdHM="}}}}}}, nil},
 		{"Error", repo(dummyClient{assert: assert, structureServiceBaseUrl: "http://metadata.internal.ft.com:83", principalHeader: "someHeader",
 			resp: http.Response{StatusCode: http.StatusOK, Body: ioutil.NopCloser(subjectsXml)}, err: errors.New("Some error")}),
-			model.Taxonomy{}, errors.New("Some error")},
+			Taxonomy{}, errors.New("Some error")},
 		{"Non 200 from structure service", repo(dummyClient{assert: assert, structureServiceBaseUrl: "http://metadata.internal.ft.com:83", principalHeader: "someHeader",
 			resp: http.Response{StatusCode: http.StatusBadRequest, Body: ioutil.NopCloser(subjectsXml)}}),
-			model.Taxonomy{}, errors.New("Structure service returned 400")},
+			Taxonomy{}, errors.New("Structure service returned 400")},
 		{"Unmarshalling error", repo(dummyClient{assert: assert, structureServiceBaseUrl: "http://metadata.internal.ft.com:83", principalHeader: "someHeader",
 			resp: http.Response{StatusCode: http.StatusOK, Body: ioutil.NopCloser(bytes.NewReader([]byte("Non xml")))}}),
-			model.Taxonomy{}, errors.New("EOF")},
+			Taxonomy{}, errors.New("EOF")},
 	}
 
 	for _, test := range tests {

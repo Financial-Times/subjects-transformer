@@ -1,7 +1,6 @@
-package service
+package main
 
 import (
-	"github.com/Financial-Times/subjects-transformer/model"
 	"net/http"
 )
 
@@ -10,16 +9,16 @@ type Client interface {
 }
 
 type SubjectService interface {
-	GetSubjects() ([]model.SubjectLink, bool)
-	GetSubjectByUuid(uuid string) (model.Subject, bool)
+	GetSubjects() ([]SubjectLink, bool)
+	GetSubjectByUuid(uuid string) (Subject, bool)
 }
 
 type subjectServiceImpl struct {
 	repository   Repository
 	transformer  SubjectTransformer
 	baseUrl      string
-	subjectsMap  map[string]model.Subject
-	subjectLinks []model.SubjectLink
+	subjectsMap  map[string]Subject
+	subjectLinks []SubjectLink
 }
 
 func NewSubjectService(repo Repository, transformer SubjectTransformer, baseUrl string) (SubjectService, error) {
@@ -33,7 +32,7 @@ func NewSubjectService(repo Repository, transformer SubjectTransformer, baseUrl 
 }
 
 func (s *subjectServiceImpl) init() error {
-	s.subjectsMap = make(map[string]model.Subject)
+	s.subjectsMap = make(map[string]Subject)
 	tax, err := s.repository.getSubjectsTaxonomy()
 	if err != nil {
 		return err
@@ -42,23 +41,23 @@ func (s *subjectServiceImpl) init() error {
 	return nil
 }
 
-func (s *subjectServiceImpl) GetSubjects() ([]model.SubjectLink, bool) {
+func (s *subjectServiceImpl) GetSubjects() ([]SubjectLink, bool) {
 	if len(s.subjectLinks) > 0 {
 		return s.subjectLinks, true
 	}
 	return s.subjectLinks, false
 }
 
-func (s *subjectServiceImpl) GetSubjectByUuid(uuid string) (model.Subject, bool) {
+func (s *subjectServiceImpl) GetSubjectByUuid(uuid string) (Subject, bool) {
 	subject, found := s.subjectsMap[uuid]
 	return subject, found
 }
 
-func (s *subjectServiceImpl) initSubjectsMap(terms []model.Term) {
+func (s *subjectServiceImpl) initSubjectsMap(terms []Term) {
 	for _, t := range terms {
 		sub := s.transformer.transform(t)
 		s.subjectsMap[sub.UUID] = sub
-		s.subjectLinks = append(s.subjectLinks, model.SubjectLink{ApiUrl: s.baseUrl + sub.UUID})
+		s.subjectLinks = append(s.subjectLinks, SubjectLink{ApiUrl: s.baseUrl + sub.UUID})
 		s.initSubjectsMap(t.Children.Terms)
 	}
 }
