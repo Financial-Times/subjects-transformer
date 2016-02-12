@@ -1,12 +1,12 @@
-package model
+package main
 
-type Subject struct {
+type subject struct {
 	UUID          string `json:"uuid"`
 	CanonicalName string `json:"canonicalName"`
 	TmeIdentifier string `json:"tmeIdentifier,omitempty"`
 	Type          string `json:"type"`
 }
 
-type SubjectLink struct {
-	ApiUrl string `json:"apiUrl"`
+type subjectLink struct {
+	APIURL string `json:"apiUrl"`
 }
