@@ -9,7 +9,7 @@ import (
 	"testing"
 )
 
-const uuid = "bba39990-c78d-3629-ae83-808c333c6dbc"
+const testUUID = "bba39990-c78d-3629-ae83-808c333c6dbc"
 const getSubjectsResponse = "[{\"apiUrl\":\"http://localhost:8080/transformers/subjects/bba39990-c78d-3629-ae83-808c333c6dbc\"}]\n"
 const getSubjectByUUIDResponse = "{\"uuid\":\"bba39990-c78d-3629-ae83-808c333c6dbc\",\"canonicalName\":\"Metals Markets\",\"tmeIdentifier\":\"MTE3-U3ViamVjdHM=\",\"type\":\"Subject\"}\n"
 
@@ -23,9 +23,9 @@ func TestHandlers(t *testing.T) {
 		contentType  string // Contents of the Content-Type header
 		body         string
 	}{
-		{"Success - get subject by uuid", newRequest("GET", fmt.Sprintf("/transformers/subjects/%s", uuid)), &dummyService{found: true, subjects: []subject{subject{UUID: uuid, CanonicalName: "Metals Markets", TmeIdentifier: "MTE3-U3ViamVjdHM=", Type: "Subject"}}}, http.StatusOK, "application/json", getSubjectByUUIDResponse},
-		{"Not found - get subject by uuid", newRequest("GET", fmt.Sprintf("/transformers/subjects/%s", uuid)), &dummyService{found: false, subjects: []subject{subject{}}}, http.StatusNotFound, "application/json", ""},
-		{"Success - get subjects", newRequest("GET", "/transformers/subjects"), &dummyService{found: true, subjects: []subject{subject{UUID: uuid}}}, http.StatusOK, "application/json", getSubjectsResponse},
+		{"Success - get subject by uuid", newRequest("GET", fmt.Sprintf("/transformers/subjects/%s", testUUID)), &dummyService{found: true, subjects: []subject{subject{UUID: testUUID, CanonicalName: "Metals Markets", TmeIdentifier: "MTE3-U3ViamVjdHM=", Type: "Subject"}}}, http.StatusOK, "application/json", getSubjectByUUIDResponse},
+		{"Not found - get subject by uuid", newRequest("GET", fmt.Sprintf("/transformers/subjects/%s", testUUID)), &dummyService{found: false, subjects: []subject{subject{}}}, http.StatusNotFound, "application/json", ""},
+		{"Success - get subjects", newRequest("GET", "/transformers/subjects"), &dummyService{found: true, subjects: []subject{subject{UUID: testUUID}}}, http.StatusOK, "application/json", getSubjectsResponse},
 		{"Not found - get subjects", newRequest("GET", "/transformers/subjects"), &dummyService{found: false, subjects: []subject{}}, http.StatusNotFound, "application/json", ""},
 	}
 
