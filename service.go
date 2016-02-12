@@ -15,15 +15,14 @@ type subjectService interface {
 
 type subjectServiceImpl struct {
 	repository   repository
-	transformer  subjectTransformer
 	baseURL      string
 	subjectsMap  map[string]subject
 	subjectLinks []subjectLink
 }
 
-func newSubjectService(repo repository, transformer subjectTransformer, baseURL string) (subjectService, error) {
+func newSubjectService(repo repository, baseURL string) (subjectService, error) {
 
-	s := &subjectServiceImpl{repository: repo, transformer: transformer, baseURL: baseURL}
+	s := &subjectServiceImpl{repository: repo, baseURL: baseURL}
 	err := s.init()
 	if err != nil {
 		return &subjectServiceImpl{}, err
@@ -55,7 +54,7 @@ func (s *subjectServiceImpl) getSubjectByUUID(uuid string) (subject, bool) {
 
 func (s *subjectServiceImpl) initSubjectsMap(terms []term) {
 	for _, t := range terms {
-		sub := s.transformer.transform(t)
+		sub := transformSubject(t)
 		s.subjectsMap[sub.UUID] = sub
 		s.subjectLinks = append(s.subjectLinks, subjectLink{APIURL: s.baseURL + sub.UUID})
 		s.initSubjectsMap(t.Children.Terms)

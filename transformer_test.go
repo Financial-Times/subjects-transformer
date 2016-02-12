@@ -8,7 +8,6 @@ import (
 
 func TestTransform(t *testing.T) {
 	assert := assert.New(t)
-	transformer := subjectTransformer{}
 	tests := []struct {
 		name    string
 		term    term
@@ -18,7 +17,7 @@ func TestTransform(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		expectedSubject := transformer.transform(test.term)
+		expectedSubject := transformSubject(test.term)
 		assert.Equal(test.subject, expectedSubject, fmt.Sprintf("%s: Expected subject incorrect", test.name))
 	}
 

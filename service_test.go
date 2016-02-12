@@ -26,7 +26,7 @@ func TestGetSubjects(t *testing.T) {
 
 	for _, test := range tests {
 		repo := dummyRepo{tax: test.tax, err: test.err}
-		service, err := newSubjectService(&repo, subjectTransformer{}, test.baseURL)
+		service, err := newSubjectService(&repo, test.baseURL)
 		expectedSubjects, found := service.getSubjects()
 		assert.Equal(test.subjects, expectedSubjects, fmt.Sprintf("%s: Expected subjects link incorrect", test.name))
 		assert.Equal(test.found, found)
@@ -53,7 +53,7 @@ func TestGetSubjectByUuid(t *testing.T) {
 
 	for _, test := range tests {
 		repo := dummyRepo{tax: test.tax, err: test.err}
-		service, err := newSubjectService(&repo, subjectTransformer{}, "")
+		service, err := newSubjectService(&repo, "")
 		expectedSubject, found := service.getSubjectByUUID(test.uuid)
 		assert.Equal(test.subject, expectedSubject, fmt.Sprintf("%s: Expected subject incorrect", test.name))
 		assert.Equal(test.found, found)
