@@ -64,7 +64,6 @@ func (s *subjectServiceImpl) getSubjects() ([]subjectLink, bool) {
 }
 
 func (s *subjectServiceImpl) getSubjectByUUID(uuid string) (subject, bool) {
-	log.Infof("MAP: %v", s.subjectsMap)
 	subject, found := s.subjectsMap[uuid]
 	return subject, found
 }
