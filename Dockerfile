@@ -19,7 +19,6 @@ RUN apk add --update bash \
   && cp -r subjects-transformer/* $GOPATH/src/${REPO_PATH} \
   && cd $GOPATH/src/${REPO_PATH} \
   && go get -t ./... \
-  && cd $GOPATH/src/${REPO_PATH} \
   && echo ${LDFLAGS} \
   && go build -ldflags="${LDFLAGS}" \
   && mv subjects-transformer /app \
