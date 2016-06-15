@@ -13,11 +13,21 @@ func TestTransform(t *testing.T) {
 		term    term
 		subject subject
 	}{
-		{"Trasform term to subject", term{CanonicalName: "Metals Markets", ID: "MTE3-U3ViamVjdHM="}, subject{UUID: "bba39990-c78d-3629-ae83-808c333c6dbc", CanonicalName: "Metals Markets", TmeIdentifier: "MTE3-U3ViamVjdHM=", Type: "Subject"}},
+		{"Transform term to subject", term{
+			CanonicalName: "SubjectZ",
+			RawID:         "Nstein_GL_AFTM_GL_164835"},
+			subject{
+				UUID:      "3a845a8d-944d-364e-8670-81f26434546e",
+				PrefLabel: "SubjectZ",
+				AlternativeIdentifiers: alternativeIdentifiers{
+					TME:   []string{"TnN0ZWluX0dMX0FGVE1fR0xfMTY0ODM1-U3ViamVjdHM="},
+					Uuids: []string{"3a845a8d-944d-364e-8670-81f26434546e"},
+				},
+				Type: "Subject"}},
 	}
 
 	for _, test := range tests {
-		expectedSubject := transformSubject(test.term)
+		expectedSubject := transformSubject(test.term, "Subjects")
 		assert.Equal(test.subject, expectedSubject, fmt.Sprintf("%s: Expected subject incorrect", test.name))
 	}
 
