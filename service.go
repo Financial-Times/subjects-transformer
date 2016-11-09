@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/Financial-Times/tme-reader/tmereader"
 	log "github.com/Sirupsen/logrus"
 	"net/http"
@@ -14,6 +15,9 @@ type subjectService interface {
 	getSubjects() ([]subjectLink, bool)
 	getSubjectByUUID(uuid string) (subject, bool)
 	checkConnectivity() error
+	getSubjectCount() int
+	getSubjectIds() []string
+	reload() error
 }
 
 type subjectServiceImpl struct {
@@ -57,6 +61,7 @@ func (s *subjectServiceImpl) init() error {
 }
 
 func (s *subjectServiceImpl) getSubjects() ([]subjectLink, bool) {
+	fmt.Println("Did we get here?")
 	if len(s.subjectLinks) > 0 {
 		return s.subjectLinks, true
 	}
@@ -85,4 +90,42 @@ func (s *subjectServiceImpl) initSubjectsMap(terms []interface{}) {
 		s.subjectsMap[top.UUID] = top
 		s.subjectLinks = append(s.subjectLinks, subjectLink{APIURL: s.baseURL + top.UUID})
 	}
+}
+
+func (s *subjectServiceImpl) getSubjectCount() int {
+	fmt.Println("Did we get here?")
+	return len(s.subjectLinks)
+}
+
+func (s *subjectServiceImpl) getSubjectIds() []string {
+	i := 0
+	keys := make([]string, len(s.subjectsMap))
+
+	for k := range s.subjectsMap {
+		keys[i] = k
+		i++
+	}
+	return keys
+}
+
+func (s *subjectServiceImpl) reload() error {
+	s.subjectsMap = make(map[string]subject)
+	responseCount := 0
+	log.Println("Fetching subjects from TME")
+	for {
+		terms, err := s.repository.GetTmeTermsFromIndex(responseCount)
+		if err != nil {
+			return err
+		}
+
+		if len(terms) < 1 {
+			log.Println("Finished fetching subjects from TME")
+			break
+		}
+		s.initSubjectsMap(terms)
+		responseCount += s.maxTmeRecords
+	}
+	log.Printf("Added %d subjects links\n", len(s.subjectLinks))
+
+	return nil
 }
