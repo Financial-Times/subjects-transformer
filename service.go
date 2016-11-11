@@ -31,33 +31,11 @@ type subjectServiceImpl struct {
 
 func newSubjectService(repo tmereader.Repository, baseURL string, taxonomyName string, maxTmeRecords int) (subjectService, error) {
 	s := &subjectServiceImpl{repository: repo, baseURL: baseURL, taxonomyName: taxonomyName, maxTmeRecords: maxTmeRecords}
-	err := s.init()
+	err := s.reload()
 	if err != nil {
 		return &subjectServiceImpl{}, err
 	}
 	return s, nil
-}
-
-func (s *subjectServiceImpl) init() error {
-	s.subjectsMap = make(map[string]subject)
-	responseCount := 0
-	log.Printf("Fetching subjects from TME\n")
-	for {
-		terms, err := s.repository.GetTmeTermsFromIndex(responseCount)
-		if err != nil {
-			return err
-		}
-
-		if len(terms) < 1 {
-			log.Printf("Finished fetching subjects from TME\n")
-			break
-		}
-		s.initSubjectsMap(terms)
-		responseCount += s.maxTmeRecords
-	}
-	log.Printf("Added %d subject links\n", len(s.subjectLinks))
-
-	return nil
 }
 
 func (s *subjectServiceImpl) getSubjects() ([]subjectLink, bool) {
