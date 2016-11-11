@@ -39,7 +39,6 @@ func newSubjectService(repo tmereader.Repository, baseURL string, taxonomyName s
 }
 
 func (s *subjectServiceImpl) getSubjects() ([]subjectLink, bool) {
-	fmt.Println("Did we get here?")
 	if len(s.subjectLinks) > 0 {
 		return s.subjectLinks, true
 	}
@@ -71,7 +70,6 @@ func (s *subjectServiceImpl) initSubjectsMap(terms []interface{}) {
 }
 
 func (s *subjectServiceImpl) getSubjectCount() int {
-	fmt.Println("Did we get here?")
 	return len(s.subjectLinks)
 }
 
