@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/Financial-Times/tme-reader/tmereader"
 	log "github.com/Sirupsen/logrus"
 	"net/http"
