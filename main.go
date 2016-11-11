@@ -99,7 +99,7 @@ func main() {
 		m.HandleFunc("/transformers/subjects", h.getSubjects).Methods("GET")
 		m.HandleFunc("/transformers/subjects/__ids", h.getIds).Methods("GET")
 		m.HandleFunc("/transformers/subjects/__count", h.getCount).Methods("GET")
-		m.HandleFunc("/transformers/subjects/__reload", h.getIds).Methods("GET")
+		m.HandleFunc("/transformers/subjects/__reload", h.reload).Methods("POST")
 		m.HandleFunc("/transformers/subjects/{uuid}", h.getSubjectByUUID).Methods("GET")
 
 		http.Handle("/", m)
