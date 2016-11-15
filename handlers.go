@@ -7,6 +7,7 @@ import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/gorilla/mux"
 	"net/http"
+	"strconv"
 )
 
 type subjectsHandler struct {
@@ -77,4 +78,42 @@ func writeJSONResponse(obj interface{}, found bool, writer http.ResponseWriter) 
 func writeJSONError(w http.ResponseWriter, errorMsg string, statusCode int) {
 	w.WriteHeader(statusCode)
 	fmt.Fprintln(w, fmt.Sprintf("{\"message\": \"%s\"}", errorMsg))
+}
+
+func (h *subjectsHandler) getCount(writer http.ResponseWriter, req *http.Request) {
+	count := h.service.getSubjectCount()
+	_, err := writer.Write([]byte(strconv.Itoa(count)))
+	if err != nil {
+		log.Warnf("Couldn't write count to HTTP response. count=%d %v\n", count, err)
+		writer.WriteHeader(http.StatusInternalServerError)
+	}
+}
+
+func (h *subjectsHandler) getIds(writer http.ResponseWriter, req *http.Request) {
+	ids := h.service.getSubjectIds()
+	writer.Header().Add("Content-Type", "text/plain")
+	if len(ids) == 0 {
+		writer.WriteHeader(http.StatusOK)
+		return
+	}
+	enc := json.NewEncoder(writer)
+	type subjectID struct {
+		ID string `json:"id"`
+	}
+	for _, id := range ids {
+		rID := subjectID{ID: id}
+		err := enc.Encode(rID)
+		if err != nil {
+			log.Warnf("Couldn't encode to HTTP response subject with uuid=%s %v\n", id, err)
+			continue
+		}
+	}
+}
+
+func (h *subjectsHandler) reload(writer http.ResponseWriter, req *http.Request) {
+	err := h.service.reload()
+	if err != nil {
+		log.Warnf("Problem reloading terms from TME: %v", err)
+		writer.WriteHeader(http.StatusInternalServerError)
+	}
 }
