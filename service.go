@@ -85,6 +85,8 @@ func (s *subjectServiceImpl) getSubjectIds() []string {
 
 func (s *subjectServiceImpl) reload() error {
 	s.subjectsMap = make(map[string]subject)
+	var links []subjectLink
+	s.subjectLinks = links
 	responseCount := 0
 	log.Println("Fetching subjects from TME")
 	for {
