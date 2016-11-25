@@ -15,7 +15,8 @@ func transformSubject(tmeTerm term, taxonomyName string) subject {
 		UUID:                   uuid,
 		PrefLabel:              tmeTerm.CanonicalName,
 		AlternativeIdentifiers: alternativeIdentifiers{TME: []string{tmeIdentifier}, Uuids: []string{uuid}},
-		Type: "Subject",
+		PrimaryType:            primaryType,
+		TypeHierarchy:          subjectTypes,
 	}
 }
 

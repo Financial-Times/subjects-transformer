@@ -81,10 +81,11 @@ func (d *dummyRepo) GetTmeTermById(uuid string) (interface{}, error) {
 	return d.terms[0], d.err
 }
 
-func getDummySubject(uuid string, prefLabel string, tmeId string) subject {
+func getDummySubject(uuid string, prefLabel string, tmeID string) subject {
 	return subject{
-		UUID:      uuid,
-		PrefLabel: prefLabel,
-		Type:      "Subject",
-		AlternativeIdentifiers: alternativeIdentifiers{TME: []string{tmeId}, Uuids: []string{uuid}}}
+		UUID:                   uuid,
+		PrefLabel:              prefLabel,
+		PrimaryType:            primaryType,
+		TypeHierarchy:          subjectTypes,
+		AlternativeIdentifiers: alternativeIdentifiers{TME: []string{tmeID}, Uuids: []string{uuid}}}
 }

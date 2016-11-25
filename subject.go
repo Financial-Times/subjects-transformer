@@ -4,7 +4,8 @@ type subject struct {
 	UUID                   string                 `json:"uuid"`
 	AlternativeIdentifiers alternativeIdentifiers `json:"alternativeIdentifiers,omitempty"`
 	PrefLabel              string                 `json:"prefLabel"`
-	Type                   string                 `json:"type"`
+	PrimaryType            string                 `json:"type"`
+	TypeHierarchy          []string               `json:"types"`
 }
 
 type alternativeIdentifiers struct {
@@ -15,3 +16,6 @@ type alternativeIdentifiers struct {
 type subjectLink struct {
 	APIURL string `json:"apiUrl"`
 }
+
+var primaryType = "Subject"
+var subjectTypes = []string{"Thing", "Concept", "Classification", "Subject"}

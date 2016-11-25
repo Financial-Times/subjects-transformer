@@ -13,7 +13,7 @@ import (
 
 const testUUID = "bba39990-c78d-3629-ae83-808c333c6dbc"
 const getSubjectsResponse = `[{"apiUrl":"http://localhost:8080/transformers/subjects/bba39990-c78d-3629-ae83-808c333c6dbc"}]`
-const getSubjectByUUIDResponse = `{"uuid":"bba39990-c78d-3629-ae83-808c333c6dbc","alternativeIdentifiers":{"TME":["MTE3-U3ViamVjdHM="],"uuids":["bba39990-c78d-3629-ae83-808c333c6dbc"]},"prefLabel":"Global Subjects","type":"Subject"}`
+const getSubjectByUUIDResponse = `{"uuid":"bba39990-c78d-3629-ae83-808c333c6dbc","alternativeIdentifiers":{"TME":["MTE3-U3ViamVjdHM="],"uuids":["bba39990-c78d-3629-ae83-808c333c6dbc"]},"prefLabel":"Global Subjects","type":"Subject","types":["Thing","Concept","Classification","Subject"]}`
 const getSubjectsCountResponse = `1`
 const getSubjectsIdsResponse = `{"id":"bba39990-c78d-3629-ae83-808c333c6dbc"}`
 
